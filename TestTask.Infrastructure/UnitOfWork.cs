@@ -10,9 +10,12 @@ namespace TestTask.Infrastructure
 {
     public class UnitOfWork : IUnitOfWork
     {
-       
+
+        public IWalletRepository WalletRepository => new WalletRepository(_db);
         public IUserRepository UserRepository => new UserRepository(_db);
-        
+        public IMoneyTransferRepository MoneyTransferRepository => new MoneyTransferRepository(_db);
+
+
 
         private readonly AppDbContext _db;
 

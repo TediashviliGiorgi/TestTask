@@ -8,9 +8,9 @@ namespace TestTask.Domain.Interfaces
 {
     public interface IUnitOfWork
     {
-        
+        IWalletRepository WalletRepository { get; }
         IUserRepository UserRepository { get; }
-       
+        IMoneyTransferRepository MoneyTransferRepository { get; }
         Task SaveChangesAsync();
     }
 }

@@ -18,6 +18,7 @@ namespace TestTask.Infrastructure
 
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<WalletEntity> Wallets { get; set; }
+        public DbSet<MoneyTransferEntity> MoneyTransfers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
