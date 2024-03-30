@@ -20,8 +20,8 @@ namespace TestTask.API.Controllers
         public async Task<IActionResult> CreateWallet(CreateWalletCommand command)
         {
 
-            await _mediator.Send(command);
-            return Ok("Wallet created successfully");
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
     }
 }

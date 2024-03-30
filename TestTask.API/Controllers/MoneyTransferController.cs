@@ -17,10 +17,10 @@ namespace TestTask.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> TransferMoney(TransferMonneyCommand command)
+        public async Task<IActionResult> TransferMoney(TransferMoneyCommand command)
         {
-            await _mediator.Send(command);
-            return Ok();
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
     }
 }

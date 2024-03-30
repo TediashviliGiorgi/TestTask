@@ -1,13 +1,12 @@
-﻿using MediatR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestTask.Application.Commands.MoneyTransfers
+namespace TestTask.Application.DTOs.Responses
 {
-    public record TransferMonneyCommand : IRequest<Unit>
+    public class TransferMoneyResponse
     {
         public int SenderId { get; init; }
         public int ReceiverId { get; init; }

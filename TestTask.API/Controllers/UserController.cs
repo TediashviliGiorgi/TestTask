@@ -19,15 +19,15 @@ namespace TestTask.API.Controllers
         [HttpPost("create_user")]
         public async Task<IActionResult> CreateUser(CreateUserCommand command)
         {
-            await _mediator.Send(command);
-            return Ok();
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
 
         [HttpDelete("delete_user")]
         public async Task<IActionResult> DeleteUser([FromQuery] int id)
         {
-            await _mediator.Send(new DeleteUserCommand { UserId = id });
-            return Ok();
+            var result = await _mediator.Send(new DeleteUserCommand { UserId = id });
+            return Ok(result);
         }
     }
 }

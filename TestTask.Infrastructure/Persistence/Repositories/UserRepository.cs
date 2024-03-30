@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Azure.Core;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +21,14 @@ namespace TestTask.Infrastructure.Persistence.Repositories
 
         public async Task<UserEntity> GetByIdAsync(int id)
         {
-            return await _db.Users.FindAsync(id);
+            return await _db.Users
+                .Include(u => u.Wallet) // Include the WalletEntity
+                .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<UserEntity> GetByEmailAsync(string email)
+        {
+            return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task AddAsync(UserEntity user)

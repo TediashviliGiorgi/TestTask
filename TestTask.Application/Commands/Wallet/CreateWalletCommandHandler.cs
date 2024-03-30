@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestTask.Application.DTOs.Responses;
 using TestTask.Domain.Entities;
 using TestTask.Domain.Interfaces;
 
 namespace TestTask.Application.Commands.Wallet
 {
-    public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, Unit>
+    public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, BaseResponse<CreateWalletResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -18,27 +19,45 @@ namespace TestTask.Application.Commands.Wallet
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(CreateWalletCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<CreateWalletResponse>> Handle(CreateWalletCommand request, CancellationToken cancellationToken)
         {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId);
-
-            if (user == null)
+            try
             {
-                throw new Exception("User not found.");
+                var user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId);
+
+                if (user == null)
+                {
+                    return new BaseResponse<CreateWalletResponse>(false, "User not found.", null);
+                }
+
+                if (user.Wallet != null)
+                {
+                    return new BaseResponse<CreateWalletResponse>(false, "User already has a wallet.", null);
+                }
+
+                var wallet = new WalletEntity
+                {
+                    UserId = request.UserId,
+                    Balance = request.Balance
+                };
+
+                await _unitOfWork.WalletRepository.CreateAsync(wallet);
+                user.Wallet = wallet;
+                await _unitOfWork.SaveChangesAsync();
+
+                var response = new CreateWalletResponse
+                {
+                    UserId = wallet.UserId,
+                    Balance = wallet.Balance
+                };
+
+                return new BaseResponse<CreateWalletResponse>(true, "Wallet created successfully.", response);
             }
-
-            var wallet = new WalletEntity
+            catch (Exception ex)
             {
-                UserId = request.UserId,
-                Balance = request.Balance
-            };
-
-            await _unitOfWork.WalletRepository.CreateAsync(wallet);
-
-            user.Wallet = wallet;
-            await _unitOfWork.SaveChangesAsync();
-
-            return Unit.Value;
+               
+                return new BaseResponse<CreateWalletResponse>(false, ex.Message, null);
+            }
         }
     }
 }
