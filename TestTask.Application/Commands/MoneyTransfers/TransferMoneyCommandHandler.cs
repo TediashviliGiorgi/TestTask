@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestTask.Application.DTOs.Responses;
-using TestTask.Domain.Entities;
 using TestTask.Domain.Interfaces;
+using TestTask.Domain.Models;
 
 
 namespace TestTask.Application.Commands.MoneyTransfers
@@ -52,26 +52,16 @@ namespace TestTask.Application.Commands.MoneyTransfers
                     return new BaseResponse<TransferMoneyResponse>(false, "Receiver doesn't have a wallet", null);
                 }
 
-                if (request.SenderId == request.ReceiverId)
-                {
-                    return new BaseResponse<TransferMoneyResponse>(false, "Internal Transaction not allowed", null);
-                }
-
                 if (senderWallet.Balance < request.Amount)
                 {
                     return new BaseResponse<TransferMoneyResponse>(false, "Not enough money", null);
                 }
 
-                senderWallet.Balance -= request.Amount;
-                receiverWallet.Balance += request.Amount;
 
-                var transfer = new MoneyTransferEntity
-                {
-                    SenderUserId = request.SenderId,
-                    ReceiverUserId = request.ReceiverId,
-                    Amount = request.Amount,
-                    TransferDate = DateTime.UtcNow,
-                };
+                var transfer = MoneyTransfer.Create(request.SenderId, request.ReceiverId, request.Amount);
+
+                senderWallet.Withdraw(transfer.Amount);
+                receiverWallet.Deposit(transfer.Amount);
 
                 await _unitOfWork.MoneyTransferRepository.AddAsync(transfer);
                 await _unitOfWork.SaveChangesAsync();

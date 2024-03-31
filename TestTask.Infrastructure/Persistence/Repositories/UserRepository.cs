@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TestTask.Domain.Entities;
+using TestTask.Domain.Models;
 using TestTask.Domain.Interfaces;
 
 namespace TestTask.Infrastructure.Persistence.Repositories
@@ -19,19 +19,19 @@ namespace TestTask.Infrastructure.Persistence.Repositories
             _db = db;
         }
 
-        public async Task<UserEntity> GetByIdAsync(int id)
+        public async Task<User> GetByIdAsync(int id)
         {
             return await _db.Users
                 .Include(u => u.Wallet) // Include the WalletEntity
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public async Task<UserEntity> GetByEmailAsync(string email)
+        public async Task<User> GetByEmailAsync(string email)
         {
             return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task AddAsync(UserEntity user)
+        public async Task AddAsync(User user)
         {
             await _db.Users.AddAsync(user);
         }

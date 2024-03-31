@@ -22,7 +22,7 @@ namespace TestTask.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TestTask.Domain.Entities.MoneyTransferEntity", b =>
+            modelBuilder.Entity("TestTask.Domain.Models.MoneyTransfer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,7 +47,7 @@ namespace TestTask.Infrastructure.Migrations
                     b.ToTable("MoneyTransfers");
                 });
 
-            modelBuilder.Entity("TestTask.Domain.Entities.UserEntity", b =>
+            modelBuilder.Entity("TestTask.Domain.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -76,7 +76,7 @@ namespace TestTask.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TestTask.Domain.Entities.WalletEntity", b =>
+            modelBuilder.Entity("TestTask.Domain.Models.Wallet", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -98,18 +98,18 @@ namespace TestTask.Infrastructure.Migrations
                     b.ToTable("Wallets");
                 });
 
-            modelBuilder.Entity("TestTask.Domain.Entities.WalletEntity", b =>
+            modelBuilder.Entity("TestTask.Domain.Models.Wallet", b =>
                 {
-                    b.HasOne("TestTask.Domain.Entities.UserEntity", "User")
+                    b.HasOne("TestTask.Domain.Models.User", "User")
                         .WithOne("Wallet")
-                        .HasForeignKey("TestTask.Domain.Entities.WalletEntity", "UserId")
+                        .HasForeignKey("TestTask.Domain.Models.Wallet", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TestTask.Domain.Entities.UserEntity", b =>
+            modelBuilder.Entity("TestTask.Domain.Models.User", b =>
                 {
                     b.Navigation("Wallet")
                         .IsRequired();

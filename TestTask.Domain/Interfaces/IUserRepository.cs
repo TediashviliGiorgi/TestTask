@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TestTask.Domain.Entities;
+using TestTask.Domain.Models;
 
 namespace TestTask.Domain.Interfaces
 {
     public interface IUserRepository
     {
-        Task<UserEntity> GetByEmailAsync(string email);
-        Task<UserEntity> GetByIdAsync(int id);
-        Task AddAsync(UserEntity user);
+        Task<User> GetByEmailAsync(string email);
+        Task<User> GetByIdAsync(int id);
+        Task AddAsync(User user);
         Task RemoveAsync(int id);
     }
 }

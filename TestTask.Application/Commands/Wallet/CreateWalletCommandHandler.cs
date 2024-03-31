@@ -1,11 +1,9 @@
 ﻿using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TestTask.Application.DTOs.Responses;
-using TestTask.Domain.Entities;
+using TestTask.Domain.Models;
 using TestTask.Domain.Interfaces;
 
 namespace TestTask.Application.Commands.Wallet
@@ -30,19 +28,9 @@ namespace TestTask.Application.Commands.Wallet
                     return new BaseResponse<CreateWalletResponse>(false, "User not found.", null);
                 }
 
-                if (user.Wallet != null)
-                {
-                    return new BaseResponse<CreateWalletResponse>(false, "User already has a wallet.", null);
-                }
-
-                var wallet = new WalletEntity
-                {
-                    UserId = request.UserId,
-                    Balance = request.Balance
-                };
+                var wallet = Domain.Models.Wallet.Create(request.UserId, request.Balance);
 
                 await _unitOfWork.WalletRepository.CreateAsync(wallet);
-                user.Wallet = wallet;
                 await _unitOfWork.SaveChangesAsync();
 
                 var response = new CreateWalletResponse
@@ -53,9 +41,8 @@ namespace TestTask.Application.Commands.Wallet
 
                 return new BaseResponse<CreateWalletResponse>(true, "Wallet created successfully.", response);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-               
                 return new BaseResponse<CreateWalletResponse>(false, ex.Message, null);
             }
         }

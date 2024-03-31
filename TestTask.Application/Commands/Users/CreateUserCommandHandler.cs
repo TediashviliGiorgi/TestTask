@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestTask.Application.DTOs.Responses;
 using TestTask.Application.Services.Hashing;
-using TestTask.Domain.Entities;
+using TestTask.Domain.Models;
 using TestTask.Domain.Interfaces;
 
 namespace TestTask.Application.Commands.Users
@@ -27,31 +27,22 @@ namespace TestTask.Application.Commands.Users
             try
             {
                 var userWithEmail = await _unitOfWork.UserRepository.GetByEmailAsync(request.Email);
-
                 if (userWithEmail != null)
                 {
                     return new BaseResponse<CreateUserResponse>(false, "User with this email already exists.", null);
                 }
 
                 var passwordHash = _passwordHasher.HashPassword(request.Password);
+                var user = User.Create(request.Name, request.LastName, request.Email, passwordHash);
 
-                var newUser = new UserEntity
-                {
-                    Name = request.Name,
-                    LastName = request.LastName,
-                    Email = request.Email,
-                    PasswordHash = passwordHash,
-                };
-
-                await _unitOfWork.UserRepository.AddAsync(newUser);
+                await _unitOfWork.UserRepository.AddAsync(user);
                 await _unitOfWork.SaveChangesAsync();
 
                 var response = new CreateUserResponse
                 {
-                    
-                    Name = newUser.Name,
-                    LastName = newUser.LastName,
-                    Email = newUser.Email
+                    Name = user.Name,
+                    LastName = user.LastName,
+                    Email = user.Email
                 };
 
                 return new BaseResponse<CreateUserResponse>(true, "User created successfully.", response);

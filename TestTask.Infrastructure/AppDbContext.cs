@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
-using TestTask.Domain.Entities;
+using TestTask.Domain.Models;
 
 namespace TestTask.Infrastructure
 {
@@ -16,9 +16,9 @@ namespace TestTask.Infrastructure
 
         }
 
-        public DbSet<UserEntity> Users { get; set; }
-        public DbSet<WalletEntity> Wallets { get; set; }
-        public DbSet<MoneyTransferEntity> MoneyTransfers { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<MoneyTransfer> MoneyTransfers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,15 +26,15 @@ namespace TestTask.Infrastructure
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
-            modelBuilder.Entity<UserEntity>()
+            modelBuilder.Entity<User>()
             .HasOne(u => u.Wallet)
             .WithOne(w => w.User)
-            .HasForeignKey<WalletEntity>(w => w.UserId);
+            .HasForeignKey<Wallet>(w => w.UserId);
         }
 
-        public async Task SaveChangesAsync()
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            await base.SaveChangesAsync();
+            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 }

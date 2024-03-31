@@ -12,9 +12,7 @@ namespace TestTask.Application.Commands.Wallet
 {
     public record CreateWalletCommand : IRequest<BaseResponse<CreateWalletResponse>>
     {
-        [Required(ErrorMessage = "need specify userId to assign wallet existing user")]
         public int UserId { get; set; }
-        [Required(ErrorMessage = "Balance is required.")]
         public decimal Balance { get; set; }
     }
 }

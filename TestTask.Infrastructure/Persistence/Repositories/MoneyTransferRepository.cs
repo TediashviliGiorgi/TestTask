@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TestTask.Domain.Entities;
+using TestTask.Domain.Models;
 using TestTask.Domain.Interfaces;
 
 namespace TestTask.Infrastructure.Persistence.Repositories
@@ -17,7 +17,7 @@ namespace TestTask.Infrastructure.Persistence.Repositories
             _db = db;
         }
 
-        public async Task AddAsync(MoneyTransferEntity transfer)
+        public async Task AddAsync(MoneyTransfer transfer)
         {
             await _db.MoneyTransfers.AddAsync(transfer);
         }

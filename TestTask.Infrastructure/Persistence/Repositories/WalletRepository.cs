@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using TestTask.Domain.Entities;
+using TestTask.Domain.Models;
 using TestTask.Domain.Interfaces;
 
 namespace TestTask.Infrastructure.Persistence.Repositories
@@ -18,13 +14,13 @@ namespace TestTask.Infrastructure.Persistence.Repositories
             _db = db;
         }
 
-        public async Task CreateAsync(WalletEntity wallet)
+        public async Task CreateAsync(Wallet wallet)
         {
             await _db.Wallets.AddAsync(wallet);
             await _db.SaveChangesAsync();
         }
 
-        public async Task<WalletEntity> GetByUserIdAsync(int userId)
+        public async Task<Wallet> GetByUserIdAsync(int userId)
         {
             return await _db.Wallets.FirstOrDefaultAsync(w => w.UserId == userId);
         }
